@@ -36,7 +36,7 @@ export default function Chat() {
         setMessageObj(response.data.messages);
       });
 
-    newSocket.onmessage = async (msg: any) => {
+    newSocket.onmessage = async (msg) => {
       const { from, message, to } = JSON.parse(msg.data);
 
       axios

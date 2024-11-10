@@ -10,7 +10,7 @@ const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  function handleSubmit(e) {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setIsLoading(true);
     axios
@@ -31,7 +31,7 @@ const LoginPage = () => {
       })
       .catch((error) => {
         console.error("Error:", error);
-        toast.error("Credentials donot match");
+        toast.error("Credentials do not match");
       })
       .finally(() => setIsLoading(false)); // Reset loading state regardless of outcome
   }

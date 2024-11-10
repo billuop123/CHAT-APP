@@ -1,17 +1,23 @@
 import { jwtDecode } from "jwt-decode";
 
+// Define the type for the JWT payload
+interface JwtPayload {
+  username?: string;
+}
+
 export function info() {
   const token = sessionStorage.getItem("jwt");
 
   if (!token) {
-    console.warn("Token not found in cookies");
+    console.warn("Token not found in sessionStorage");
     return null;
   }
 
   try {
-    const { username } = jwtDecode(token);
+    // Decode the token with the custom JwtPayload type
+    const { username } = jwtDecode<JwtPayload>(token);
 
-    return username;
+    return username ?? "Guest"; // Fallback if username is not present
   } catch (error) {
     console.error("Failed to decode token:", error);
     return null;
@@ -21,5 +27,5 @@ export function info() {
 export default function Appbar() {
   const username = info();
 
-  return <div>Welcome back {username}</div>;
+  return <div>Welcome back, {username}</div>;
 }
