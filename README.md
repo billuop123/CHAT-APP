@@ -1,4 +1,9 @@
-![Alt text](assets/Screenshot (748).png)
-![Alt text](assets/Screenshot (749).png)
-![Alt text](assets/Screenshot (751).png)
-SOME OF THE TECHNOLOGIES USED ARE WEBSOCKETS,PRISMA,REACT,EXPRESS
+# Project Overview
+
+Here are some screenshots of the project:
+
+![Screenshot 1](<assets/Screenshot%20(748).png>)
+![Screenshot 2](<assets/Screenshot%20(749).png>)
+![Screenshot 3](<assets/Screenshot%20(751).png>)
+
+Some of the technologies used in this project are **WebSockets**, **Prisma**, **React**, and **Express**.
