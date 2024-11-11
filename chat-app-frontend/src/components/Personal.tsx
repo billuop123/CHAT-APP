@@ -36,11 +36,8 @@ export default function Personal() {
 
     newSocket.onmessage = (msg) => {
       const { from, message, to } = JSON.parse(msg.data);
-      axios
-        .post("http://localhost:3000/api/v1/chat/add", { to, from, message })
-        .then((response) => {
-          console.log(response.data);
-        });
+
+      // Only add to messages state without saving again to the database
       if (
         (to === username1 && from === username2) ||
         (to === username2 && from === username1)
@@ -68,7 +65,16 @@ export default function Personal() {
       message: newMessage,
     };
 
+    // Send message over WebSocket
     socket.send(JSON.stringify(messageData));
+
+    // Save the message to the database only once
+    axios
+      .post("http://localhost:3000/api/v1/chat/add", messageData)
+      .then((response) => {
+        console.log("Message saved:", response.data);
+      })
+      .catch((error) => console.error("Error saving message:", error));
 
     setNewMessage("");
     setIsSending(false);
@@ -113,8 +119,7 @@ export default function Personal() {
         <button
           onClick={handleSendMessage}
           disabled={isSending || !newMessage.trim()}
-          className={`ml-4 px-4 py-2 font-semibold rounded-lg 
-          }`}
+          className="ml-4 px-4 py-2 font-semibold rounded-lg"
         >
           Send
         </button>
