@@ -89,35 +89,38 @@ export default function Chat() {
   if (sessionStorage.getItem("jwt") === "" || !sessionStorage.getItem("jwt")) {
     return <LoginRequest />;
   }
+  if (messageObj.length === 0) return <h1>You have no History</h1>;
   return (
-    <div>
+    <div className="bg-gray-100 min-h-screen p-4">
       <Appbar />
       <div
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         style={{
-          position: "fixed", // Changed to fixed positioning
+          position: "fixed",
           top: position.y,
           left: position.x,
           cursor: "move",
-          padding: "10px",
-          backgroundColor: "#f0f0f0",
-          borderRadius: "8px",
-          boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+          padding: "20px",
+          backgroundColor: "#ffffff",
+          borderRadius: "12px",
+          boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.2)",
+          width: "300px",
+          zIndex: 10,
         }}
       >
         <input
           onChange={(e) => setNewMessage(e.target.value)}
-          placeholder="Message"
+          placeholder="Enter your message"
           value={newMessage}
-          className="p-2 rounded-md mb-2 w-full"
+          className="p-3 rounded-md mb-4 w-full border border-gray-300"
         />
         <input
           onChange={(e) => setTo(e.target.value)}
-          placeholder="To (username)"
+          placeholder="Recipient Username"
           value={to}
-          className="p-2 rounded-md mb-2 w-full"
+          className="p-3 rounded-md mb-4 w-full border border-gray-300"
         />
         <button
           onClick={() => {
@@ -127,30 +130,28 @@ export default function Chat() {
             setTo("");
             setNewMessage("");
           }}
-          className="bg-blue-500 text-white py-2 px-4 rounded-md w-full"
+          className="bg-indigo-600 text-white py-3 px-4 rounded-md w-full font-semibold hover:bg-indigo-700 transition duration-300"
         >
           Send
         </button>
       </div>
 
-      <div className="flex flex-col space-y-2 mt-16 p-4 max-w-2xl mx-auto">
+      <div className="flex flex-col space-y-4 mt-24 p-6 max-w-2xl mx-auto">
         {messageObj.map((item, index) =>
           item.from === username ? (
             <div
               key={index}
-              className="self-end bg-blue-500 text-white px-4 py-2 rounded-lg max-w-xs"
+              className="self-end bg-indigo-600 text-white px-5 py-3 rounded-lg max-w-xs shadow-lg"
             >
               {item.message}
             </div>
           ) : (
             <div
               key={index}
-              className="self-start bg-gray-300 text-black px-4 py-2 rounded-lg max-w-xs"
+              className="self-start bg-gray-300 text-black px-5 py-3 rounded-lg max-w-xs shadow-lg"
             >
-              <div className="mt-4 mb-2">
-                <span className="bg-slate-100 rounded-full p-2 ">
-                  From {item.from}
-                </span>
+              <div className="mb-1 text-sm text-gray-600 font-medium">
+                From {item.from}
               </div>
               <span>{item.message}</span>
             </div>
@@ -161,7 +162,7 @@ export default function Chat() {
       {/* Go back button */}
       <button
         onClick={() => navigate(-1)}
-        className="bg-red-500 text-white ml-40 py-2 px-4 rounded-md hover:bg-red-600 transition duration-300 mt-4"
+        className="bg-red-500 text-white ml-4 py-3 px-6 rounded-md hover:bg-red-600 transition duration-300 mt-6 font-semibold"
       >
         Go Back
       </button>
