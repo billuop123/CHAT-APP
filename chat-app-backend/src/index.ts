@@ -5,7 +5,7 @@ import { WebSocket, WebSocketServer } from "ws";
 import cookieParser from "cookie-parser";
 import { chatRouter } from "./chatRoute";
 import rateLimit from "express-rate-limit";
-import compression from "compression";
+
 const app = express();
 const limiter = rateLimit({
   max: 100,
@@ -24,9 +24,9 @@ app.use(
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/chat", chatRouter);
 const httpServer = app.listen(process.env.PORT, () => {
-  console.log("Port 3000 is listening");
+  console.log(`Port ${process.env.PORT} is listening`);
 });
-app.use(compression());
+
 const wss = new WebSocketServer({ server: httpServer });
 
 wss.on("connection", function connection(ws) {

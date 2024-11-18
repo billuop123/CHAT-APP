@@ -25,8 +25,8 @@ app.use((0, cors_1.default)({
 }));
 app.use("/api/v1/user", userRoute_1.userRouter);
 app.use("/api/v1/chat", chatRoute_1.chatRouter);
-const httpServer = app.listen(3000, () => {
-    console.log("Port 3000 is listening");
+const httpServer = app.listen(process.env.PORT, () => {
+    console.log(`Port ${process.env.PORT} is listening`);
 });
 const wss = new ws_1.WebSocketServer({ server: httpServer });
 wss.on("connection", function connection(ws) {
@@ -38,5 +38,4 @@ wss.on("connection", function connection(ws) {
             }
         });
     });
-    ws.send("Hello! Message From Server!!");
 });

@@ -1,8 +1,18 @@
 import { PrismaClient } from "@prisma/client";
 import express from "express";
 import jwt from "jsonwebtoken";
+import { createClient } from "redis";
 import { z } from "zod";
-
+const redisClient = createClient();
+redisClient.on("error", (err) => console.error("Redis error:", err));
+(async () => {
+  try {
+    await redisClient.connect();
+    console.log("Connected to Redis");
+  } catch (err) {
+    console.error("Failed to connect to Redis:", err);
+  }
+})();
 export const userRouter = express.Router();
 const userSchema = z.object({
   username: z.string(),
@@ -108,4 +118,28 @@ userRouter.get("/user-info/:username", async (req: any, res: any) => {
   return res.json({
     user,
   });
+});
+userRouter.post("/usernames", async (req: any, res: any) => {
+  const { user } = req.body;
+  const cacheKey = `messages:${user}`;
+  const prisma = new PrismaClient();
+  const cachedMessages = await redisClient.get(cacheKey);
+  if (cachedMessages) {
+    return res.status(200).json({ username: JSON.parse(cachedMessages) });
+  } else {
+    const usernames = await prisma.user.findMany({
+      select: {
+        username: true,
+      },
+    });
+    const username = usernames.filter((users) =>
+      users.username.toLowerCase().startsWith(user.toLowerCase())
+    );
+    await redisClient.set(cacheKey, JSON.stringify(username), {
+      EX: 3600, // Expire after 1 hour (3600 seconds)
+    });
+    res.json({
+      username,
+    });
+  }
 });
